@@ -28,7 +28,7 @@ bool ModulePlayer::Start()
 	car.suspensionCompression = 0.83f;
 	car.suspensionDamping = 0.88f;
 	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 50.5;
+	car.frictionSlip = 3;
 	car.maxSuspensionForce = 10000.0f;
 
 	// Wheel properties ---------------------------------------
@@ -57,7 +57,7 @@ bool ModulePlayer::Start()
 	car.wheels[0].width = wheel_width;
 	car.wheels[0].front = true;
 	car.wheels[0].drive = true;
-	car.wheels[0].brake = false;
+	car.wheels[0].brake = true;
 	car.wheels[0].steering = true;
 
 	// FRONT-RIGHT ------------------------
@@ -69,7 +69,7 @@ bool ModulePlayer::Start()
 	car.wheels[1].width = wheel_width;
 	car.wheels[1].front = true;
 	car.wheels[1].drive = true;
-	car.wheels[1].brake = false;
+	car.wheels[1].brake = true;
 	car.wheels[1].steering = true;
 
 	// REAR-LEFT ------------------------
@@ -146,6 +146,17 @@ update_status ModulePlayer::Update(float dt)
 	vehicle->Brake(brake);
 
 	vehicle->Render();
+
+	float* matrix = new float[20];
+
+	vehicle->GetTransform(matrix);
+	new_pos = vec3(matrix[12], matrix[13], matrix[14]);
+	App->camera->LookAt(new_pos);
+
+	vec3 move = new_pos - last_pos;
+
+	last_pos = new_pos;
+	App->camera->Move(move);
 
 	char title[80];
 	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
