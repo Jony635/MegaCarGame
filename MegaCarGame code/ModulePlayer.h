@@ -14,7 +14,7 @@ enum CarType {
 
 #define MAX_ACCELERATION 1000.0f
 #define TURN_DEGREES 30.0f * DEGTORAD
-#define BRAKE_POWER 600.0f
+#define BRAKE_POWER 300.0f
 
 class ModulePlayer : public Module
 {

@@ -35,8 +35,17 @@ bool ModulePlayer::CleanUp()
 update_status ModulePlayer::Update(float dt)
 {
 	movecam = false;
+
 	if (vehicle != nullptr) {
 		turn = acceleration = brake = 0.0f;
+
+		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 0) {
+			acceleration = 10 * SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * MAX_ACCELERATION / 32767;
+		}
+
+		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0) {
+			brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * BRAKE_POWER / 32767;
+		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
@@ -47,6 +56,8 @@ update_status ModulePlayer::Update(float dt)
 			acceleration = 10 * MAX_ACCELERATION;
 		}
 
+
+
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		{
 			if (turn < TURN_DEGREES) {
@@ -55,6 +66,7 @@ update_status ModulePlayer::Update(float dt)
 			}
 		}
 
+	
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		{
 			if (turn > -TURN_DEGREES) {
@@ -62,6 +74,22 @@ update_status ModulePlayer::Update(float dt)
 				movecam = true;
 			}
 		}
+
+		int controller_turn = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_LEFTX);
+		if (controller_turn > 5000) {
+			if (turn < TURN_DEGREES) {
+				turn += -TURN_DEGREES * (controller_turn - 5000) / (32767 - 5000);
+				movecam = true;
+			}
+		}
+		else if (controller_turn < -5000) {
+
+			if (turn < TURN_DEGREES) {
+				turn += -TURN_DEGREES * (controller_turn - 5000) / (32767 - 5000);
+				movecam = true;
+			}
+		}
+		
 
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		{
@@ -107,6 +135,7 @@ update_status ModulePlayer::Update(float dt)
 		//	// Recalculate matrix -------------
 		//	App->camera->CalculateViewMatrix();
 		//}
+
 		vehicle->vehicle->m_wheelInfo[3].m_worldTransform.getOpenGLMatrix(matrix);
 		new_pos2 = vec3(matrix[12], matrix[13], matrix[14]);
 		App->camera->LookAt(new_pos2);

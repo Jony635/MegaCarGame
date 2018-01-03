@@ -1,4 +1,6 @@
 #pragma once
+
+
 #include "Module.h"
 #include "p2DynArray.h"
 #include "Globals.h"
@@ -19,6 +21,7 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	bool Load(char* path);
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 public:

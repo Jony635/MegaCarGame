@@ -24,12 +24,24 @@ bool ModuleInput::Init()
 	bool ret = true;
 	SDL_Init(0);
 
-	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
+	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
 		LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
+	SDL_Init(SDL_INIT_GAMECONTROLLER);
+
+		if (SDL_NumJoysticks() > 0) {
+			if (SDL_IsGameController(0)) {
+				LOG("Compatible controller found: %s", SDL_GameControllerNameForIndex(0));
+				controller = SDL_GameControllerOpen(0);
+				char* mapping = SDL_GameControllerMapping(controller);
+				LOG("Controller mapped as \%s\.", mapping);
+
+			}
+
+		}
 	return ret;
 }
 
