@@ -8,21 +8,22 @@
 #include "Application.h"
 #include "p2List.h"
 
+#include "Application.h"
+#include "PugiXml\src\pugixml.hpp"
+
 #define MAX_SNAKE 2
+
+#define RELEASE( x ) \
+    {                        \
+    if( x != NULL )        \
+	    {                      \
+      delete x;            \
+	  x = NULL;              \
+	    }                      \
+    }
 
 struct PhysBody3D;
 struct PhysMotor3D;
-
-struct MapData
-{
-	int					width;
-	int					height;
-	int					tile_width;
-	int					tile_height;
-
-	p2List<MapLayer*>	layers;
-};
-
 
 struct MapLayer {
 
@@ -43,6 +44,18 @@ struct MapLayer {
 		return data[(y*width) + x];
 	}
 };
+
+struct MapData
+{
+	int					width;
+	int					height;
+	int					tile_width;
+	int					tile_height;
+
+	p2List<MapLayer*>	layers;
+};
+
+
 
 class ModuleSceneIntro : public Module
 {

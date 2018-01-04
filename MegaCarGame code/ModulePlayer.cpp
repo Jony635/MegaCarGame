@@ -40,11 +40,10 @@ update_status ModulePlayer::Update(float dt)
 		turn = acceleration = brake = 0.0f;
 
 		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 0) {
-			acceleration = 10 * SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * MAX_ACCELERATION / MAX_AXIS;
-		}
-
-		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0) {
-			brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * BRAKE_POWER / MAX_AXIS;
+			if (vehicle->GetKmh() < 0)
+				brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * BRAKE_POWER / MAX_AXIS;
+			else
+			acceleration = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * MAX_ACCELERATION / MAX_AXIS;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -92,6 +91,13 @@ update_status ModulePlayer::Update(float dt)
 		}
 		
 
+		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0) {
+			if (vehicle->GetKmh() > 0)
+				brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * BRAKE_POWER / MAX_AXIS;
+			else if (vehicle->GetKmh() > 0)
+				acceleration = -(SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * MAX_ACCELERATION / MAX_AXIS) / 2;
+		}
+
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		{
 			brake = BRAKE_POWER;
@@ -103,9 +109,10 @@ update_status ModulePlayer::Update(float dt)
 
 		vehicle->Render();
 
-		float* matrix = new float[20];
 
 		vehicle->GetTransform(matrix);
+
+
 		new_pos = vec3(matrix[12], matrix[13], matrix[14]);
 		App->camera->LookAt(new_pos);
 

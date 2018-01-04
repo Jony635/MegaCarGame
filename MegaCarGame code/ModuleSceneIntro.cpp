@@ -53,6 +53,8 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
+
+	if(body2 == (PhysBody3D*)App->player->vehicle)
 	LOG("Hit!");
 }
 
@@ -105,7 +107,7 @@ bool ModuleSceneIntro::Load(char* path) {
 
 	if (ret == true)
 	{
-		LOG("Successfully parsed map XML file: %s", file_name);
+		LOG("Successfully parsed map XML file: %s", path);
 		LOG("width: %d height: %d", data.width, data.height);
 		LOG("tile_width: %d tile_height: %d", data.tile_width, data.tile_height);
 

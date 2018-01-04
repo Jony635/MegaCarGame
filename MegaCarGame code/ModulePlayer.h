@@ -45,4 +45,6 @@ public:
 	vec3 new_pos1;
 	vec3 new_pos2;
 
+
+	float* matrix = new float[20];
 };
