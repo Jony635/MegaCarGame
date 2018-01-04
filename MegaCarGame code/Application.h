@@ -13,6 +13,19 @@
 #include "ModulePhysics3D.h"
 #include "ModulePlayer.h"
 
+
+#include "PugiXml\src\pugixml.hpp"
+
+
+#define RELEASE( x ) \
+    {                        \
+    if( x != NULL )        \
+	    {                      \
+      delete x;            \
+	  x = NULL;              \
+	    }                      \
+    }
+
 class Application
 {
 public:

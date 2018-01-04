@@ -40,11 +40,11 @@ update_status ModulePlayer::Update(float dt)
 		turn = acceleration = brake = 0.0f;
 
 		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 0) {
-			acceleration = 10 * SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * MAX_ACCELERATION / 32767;
+			acceleration = 10 * SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * MAX_ACCELERATION / MAX_AXIS;
 		}
 
 		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0) {
-			brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * BRAKE_POWER / 32767;
+			brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * BRAKE_POWER / MAX_AXIS;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -76,16 +76,17 @@ update_status ModulePlayer::Update(float dt)
 		}
 
 		int controller_turn = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_LEFTX);
-		if (controller_turn > 5000) {
+
+		if (controller_turn > AXIS_MARGIN) {
 			if (turn < TURN_DEGREES) {
-				turn += -TURN_DEGREES * (controller_turn - 5000) / (32767 - 5000);
+				turn += -TURN_DEGREES * (controller_turn - AXIS_MARGIN) / (MAX_AXIS - AXIS_MARGIN);
 				movecam = true;
 			}
 		}
-		else if (controller_turn < -5000) {
+		else if (controller_turn < -AXIS_MARGIN) {
 
 			if (turn < TURN_DEGREES) {
-				turn += -TURN_DEGREES * (controller_turn - 5000) / (32767 - 5000);
+				turn += -TURN_DEGREES * (controller_turn - AXIS_MARGIN) / (MAX_AXIS - AXIS_MARGIN);
 				movecam = true;
 			}
 		}
@@ -103,51 +104,21 @@ update_status ModulePlayer::Update(float dt)
 		vehicle->Render();
 
 		float* matrix = new float[20];
-/*
+
 		vehicle->GetTransform(matrix);
 		new_pos = vec3(matrix[12], matrix[13], matrix[14]);
 		App->camera->LookAt(new_pos);
 
-
-		vec3 move = new_pos - last_pos;
-
-		last_pos = new_pos;
-		App->camera->Move(move);
-		*/
-		///
-		//if (movecam) {
-		//	float Sensitivity = 2;
-		//	App->camera->Position -= App->camera->Reference;
-
-		//	if (turn != 0)
-		//	{
-		//		float DeltaX = (float)turn * Sensitivity;
-
-		//		App->camera->X = rotate(App->camera->X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		//		App->camera->Y = rotate(App->camera->Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		//		App->camera->Z = rotate(App->camera->Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		//	}
-
-
-		//	App->camera->Position = App->camera->Reference + App->camera->Z * length(App->camera->Position);
-
-
-		//	// Recalculate matrix -------------
-		//	App->camera->CalculateViewMatrix();
-		//}
-
-		vehicle->vehicle->m_wheelInfo[3].m_worldTransform.getOpenGLMatrix(matrix);
+		vehicle->vehicle->m_wheelInfo[2].m_worldTransform.getOpenGLMatrix(matrix);
 		new_pos2 = vec3(matrix[12], matrix[13], matrix[14]);
 		App->camera->LookAt(new_pos2);
 
-		vehicle->vehicle->m_wheelInfo[1].m_worldTransform.getOpenGLMatrix(matrix);
+		vehicle->vehicle->m_wheelInfo[0].m_worldTransform.getOpenGLMatrix(matrix);
 		new_pos1 = vec3(matrix[12], matrix[13], matrix[14]);
 
 
 		vec3 move = new_pos1 - new_pos2;
 
-		//last_pos = new_pos;
-	//	App->camera->Move(move*2);
 		App->camera->Position = new_pos1 + move * -2 + vec3{0, 4, 0};
 
 
@@ -155,21 +126,16 @@ update_status ModulePlayer::Update(float dt)
 		new_pos = vec3(matrix[12], matrix[13], matrix[14]);
 		App->camera->LookAt(new_pos + vec3{ 0, 2, 0 });
 
-	/*	vec3 pos;
-		App->camera->Position = App->camera->Position;
-		pos.x = vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 1 * vehicle->vehicle->getForwardAxis();
-		pos.y = vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 1 * vehicle->vehicle->getUpAxis();
-		pos.z = vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 5 * vehicle->vehicle->getForwardAxis();
 
-		App->camera->Position = pos;
 
-		App->camera->LookAt(pos + vec3{ 0, 2, 0 });*/
+
+
 		char title[80];
 		sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
 		App->window->SetTitle(title);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
 		CreateCar(SPORT);
 	}
@@ -187,6 +153,9 @@ update_status ModulePlayer::Update(float dt)
 bool ModulePlayer::CreateCar(CarType type) {
 
 	VehicleInfo car;
+
+	App->physics->ClearVehicle();
+
 	switch (type)
 	{
 	case NONE:
