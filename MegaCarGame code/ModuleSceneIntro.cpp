@@ -27,7 +27,7 @@ bool ModuleSceneIntro::Start()
 	sensor->SetAsSensor(true);
 	sensor->collision_listeners.add(this);
 
-	Load("data/maps/map1.tmx");
+	Load("data/maps/map2.tmx");
 	CreateMap();
 
 
@@ -169,6 +169,7 @@ void ModuleSceneIntro::CreateMap() {
 		int size_x = 4, size_y = 4, size_z = 4;
 		int x, y, z, w, h;
 		x = y = z = w = h = 0;
+		y = size_y / 2;
 		for (int id = 0; id < layer->data->size_data; id++)
 		{
 			if (layer->data->data[id] != 0)

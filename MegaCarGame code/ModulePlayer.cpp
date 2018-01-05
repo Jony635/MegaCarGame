@@ -42,16 +42,18 @@ update_status ModulePlayer::Update(float dt)
 		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 0) {
 			if (vehicle->GetKmh() < 0)
 				brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * BRAKE_POWER / MAX_AXIS;
-			else
+			else if (vehicle->GetKmh() < 150)
 			acceleration = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * MAX_ACCELERATION / MAX_AXIS;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
+			if (vehicle->GetKmh() < 150)
 			acceleration = MAX_ACCELERATION;
 		}
 		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT || App->input->controller_key[SDL_CONTROLLER_BUTTON_A] == KEY_REPEAT)
 		{
+			if (vehicle->GetKmh() < 170)
 			acceleration = 2 * MAX_ACCELERATION;
 		}
 
@@ -185,7 +187,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.suspensionCompression = 0.83f;
 		car.suspensionDamping = 0.88f;
 		car.maxSuspensionTravelCm = 1000.0f;
-		car.frictionSlip = 5.0f;
+		car.frictionSlip = 5;
 		car.maxSuspensionForce = 10000.0f;
 
 		// Wheel properties ---------------------------------------
