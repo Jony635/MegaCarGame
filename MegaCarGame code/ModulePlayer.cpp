@@ -17,7 +17,7 @@ ModulePlayer::~ModulePlayer()
 bool ModulePlayer::Start()
 {
 	LOG("Loading player");
-	CreateCar(SPORT);
+	//CreateCar(SPORT);
 
 	
 	return true;
@@ -279,7 +279,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.wheels[3].steering = false;
 		
 		vehicle = App->physics->AddVehicle(car);
-		vehicle->SetPos(0, 2, 2);
+		vehicle->SetPos(12.5, 1, 28);
 	}
 		break;
 	case TRACTOR:

@@ -261,17 +261,29 @@ void Plane::InnerRender() const
 {
 	glLineWidth(1.0f);
 
-	glBegin(GL_LINES);
+	glBegin(GL_QUADS);
 
-	float d = 200.0f;
+	float d = 300.0f;
 
-	for(float i = -d; i <= d; i += 1.0f)
-	{
-		glVertex3f(i, 0.0f, -d);
-		glVertex3f(i, 0.0f, d);
-		glVertex3f(-d, 0.0f, i);
-		glVertex3f(d, 0.0f, i);
-	}
+	//for(float i = -d; i <= d; i += 1.0f)
+	//{
+	//	glVertex3f(i, 0.0f, -d);
+	//	glVertex3f(i, 0.0f, d);
+	//	glVertex3f(-d, 0.0f, i);
+	//	glVertex3f(d, 0.0f, i);
+	//}
+
+	float sx, sy, sz;
+	sx = sz = d;
+	sy = 0;
+
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(-sx, sy, sz);
+	glVertex3f(sx, sy, sz);
+	glVertex3f(sx, sy, -sz);
+	glVertex3f(-sx, sy, -sz);
+
+
 
 	glEnd();
 }

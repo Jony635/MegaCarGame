@@ -3,6 +3,7 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
+#include "Color.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -45,8 +46,12 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	Plane p(0, 1, 0, 0);
-	p.axis = true;
+	Plane p(0, 0, 0, 0);
+	p.wire = false;
+	p.axis = false;
+
+	p.color = { 0,1,0,1 };
+		
 	p.Render();
 
 	sensor->GetTransform(&s.transform);
@@ -165,19 +170,28 @@ void ModuleSceneIntro::CreateMap() {
 
 	for (p2List_item<MapLayer*>* layer = this->data.layers.getFirst(); layer != nullptr; layer = layer->next)
 	{
-		int size_x = 4, size_y = 4, size_z = 4;
+		int size_x = 4, size_y = 8, size_z = 4;
 		int x, y, z, w, h;
 		x = y = z = w = h = 0;
 		y = size_y / 2;
 		for (int id = 0; id < layer->data->size_data; id++)
 		{
-			if (layer->data->data[id] != 0)
+			if (layer->data->data[id] == 1)
 			{
 				Cube new_cube(size_x, size_y, size_z);
 				new_cube.SetPos(x, y, z);
 				new_cube.color = Grey;
 				App->physics->AddBody(new_cube, 0);
 				track.add(new_cube);
+			}
+			else if (layer->data->data[id] == 8)
+			{
+				Sphere new_sphere(13);
+				new_sphere.SetPos(x, y, z);
+				new_sphere.color = Red;
+				App->physics->AddBody(new_sphere, 0);
+				enter_track = new_sphere;
+				
 			}
 			w++;
 
@@ -188,7 +202,7 @@ void ModuleSceneIntro::CreateMap() {
 			}
 
 			x = w * size_x;
-			z = h * size_y;
+			z = h * size_z;
 		}
 	}
 }
@@ -204,4 +218,7 @@ void ModuleSceneIntro::Draw() {
 	{
 		box->data.Render();		
 	}
+
+	enter_track.Render();
+
 }
