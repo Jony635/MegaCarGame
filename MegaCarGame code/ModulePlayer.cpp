@@ -94,13 +94,21 @@ update_status ModulePlayer::Update(float dt)
 		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0) {
 			if (vehicle->GetKmh() > 0)
 				brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * BRAKE_POWER / MAX_AXIS;
-			else if (vehicle->GetKmh() > 0)
+			else if (vehicle->GetKmh() > -50)
 				acceleration = -(SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * MAX_ACCELERATION / MAX_AXIS) / 2;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		{
-			brake = BRAKE_POWER;
+			if (vehicle->GetKmh() > 0)
+				brake = BRAKE_POWER;
+			else if (vehicle->GetKmh() > -50)
+				acceleration = -MAX_ACCELERATION;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+		{
+			brake = 1.5 * BRAKE_POWER;
 		}
 
 		vehicle->ApplyEngineForce(acceleration);

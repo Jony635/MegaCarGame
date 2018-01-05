@@ -69,7 +69,11 @@ public:
 
 	bool Load(char* path);
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
+	
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+
+	void CreateMap();
+
 
 public:
 	Cube s;
