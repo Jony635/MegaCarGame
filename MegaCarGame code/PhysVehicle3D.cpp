@@ -25,7 +25,7 @@ void PhysVehicle3D::Render()
 {
 	Cylinder wheel;
 
-	wheel.color = Blue;
+	wheel.color = Black;
 
 	for(int i = 0; i < vehicle->getNumWheels(); ++i)
 	{
@@ -47,7 +47,7 @@ void PhysVehicle3D::Render()
 	chassis.transform.M[12] += offset.getX();
 	chassis.transform.M[13] += offset.getY();
 	chassis.transform.M[14] += offset.getZ();
-
+	chassis.color = Green;
 
 	chassis.Render();
 }

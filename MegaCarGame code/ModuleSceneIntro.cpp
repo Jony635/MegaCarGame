@@ -175,7 +175,7 @@ void ModuleSceneIntro::CreateMap() {
 			{
 				Cube new_cube(size_x, size_y, size_z);
 				new_cube.SetPos(x, y, z);
-				new_cube.color = White;
+				new_cube.color = Grey;
 				App->physics->AddBody(new_cube, 0);
 				track.add(new_cube);
 			}
