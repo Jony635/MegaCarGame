@@ -50,7 +50,7 @@ update_status ModulePlayer::Update(float dt)
 		{
 			acceleration = MAX_ACCELERATION;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT || App->input->controller_key[SDL_CONTROLLER_BUTTON_A] == KEY_REPEAT)
 		{
 			acceleration = 2 * MAX_ACCELERATION;
 		}
@@ -106,7 +106,7 @@ update_status ModulePlayer::Update(float dt)
 				acceleration = -MAX_ACCELERATION;
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT || App->input->controller_key[SDL_CONTROLLER_BUTTON_RIGHTSHOULDER] == KEY_REPEAT)
 		{
 			brake = 1.5 * BRAKE_POWER;
 		}

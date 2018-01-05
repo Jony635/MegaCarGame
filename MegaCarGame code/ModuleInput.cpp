@@ -70,6 +70,26 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 	}
 
+	int ctrkeys = SDL_GameControllerEventState(NULL);
+
+	for (int i = 0; i < 15; ++i)
+	{
+		if (SDL_GameControllerGetButton(controller, button[i]))
+		{
+			if (controller_key[i] == KEY_IDLE)
+				controller_key[i] = KEY_DOWN;
+			else
+				controller_key[i] = KEY_REPEAT;
+		}
+		else
+		{
+			if (controller_key[i] == KEY_REPEAT || controller_key[i] == KEY_DOWN)
+				controller_key[i] = KEY_UP;
+			else
+				controller_key[i] = KEY_IDLE;
+		}
+	}
+
 	Uint32 buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
 
 	mouse_x /= SCREEN_SIZE;
