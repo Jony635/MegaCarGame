@@ -50,4 +50,5 @@ public:
 
 
 	float* matrix = new float[20];
+	float* original_matrix = new float[20];
 };

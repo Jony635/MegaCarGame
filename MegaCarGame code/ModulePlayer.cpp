@@ -164,7 +164,25 @@ update_status ModulePlayer::PostUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
 		CreateCar(SPORT);
+		vehicle->GetTransform(original_matrix);
+
+		for (int i(0); i < 20; i++) {
+			LOG("%f", original_matrix[i]);
+		}
 	}
+
+
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+	{
+		vehicle->GetTransform(original_matrix);
+
+		for (int i(0); i < 20; i++) {
+			LOG("%f", original_matrix[i]);
+		}
+
+	}
+
+
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
 		CreateCar(TRACTOR);

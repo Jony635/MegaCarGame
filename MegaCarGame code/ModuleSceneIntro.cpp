@@ -27,7 +27,7 @@ bool ModuleSceneIntro::Start()
 	sensor->SetAsSensor(true);
 	sensor->collision_listeners.add(this);
 
-	Load("data/maps/map2.tmx");
+	Load("data/maps/map3.tmx");
 	CreateMap();
 
 
