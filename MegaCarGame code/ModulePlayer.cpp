@@ -52,7 +52,7 @@ update_status ModulePlayer::Update(float dt)
 		}
 		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT)
 		{
-			acceleration = 10 * MAX_ACCELERATION;
+			acceleration = 2 * MAX_ACCELERATION;
 		}
 
 
@@ -94,7 +94,7 @@ update_status ModulePlayer::Update(float dt)
 		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0) {
 			if (vehicle->GetKmh() > 0)
 				brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * BRAKE_POWER / MAX_AXIS;
-			else if (vehicle->GetKmh() > -50)
+			else if (vehicle->GetKmh() > - 30)
 				acceleration = -(SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) * MAX_ACCELERATION / MAX_AXIS) / 2;
 		}
 
@@ -102,7 +102,7 @@ update_status ModulePlayer::Update(float dt)
 		{
 			if (vehicle->GetKmh() > 0)
 				brake = BRAKE_POWER;
-			else if (vehicle->GetKmh() > -50)
+			else if (vehicle->GetKmh() > - 30)
 				acceleration = -MAX_ACCELERATION;
 		}
 
@@ -185,7 +185,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.suspensionCompression = 0.83f;
 		car.suspensionDamping = 0.88f;
 		car.maxSuspensionTravelCm = 1000.0f;
-		car.frictionSlip = 3;
+		car.frictionSlip = 5.0f;
 		car.maxSuspensionForce = 10000.0f;
 
 		// Wheel properties ---------------------------------------
@@ -213,7 +213,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.wheels[0].radius = wheel_radius;
 		car.wheels[0].width = wheel_width;
 		car.wheels[0].front = true;
-		car.wheels[0].drive = true;
+		car.wheels[0].drive = false;
 		car.wheels[0].brake = true;
 		car.wheels[0].steering = true;
 
@@ -225,7 +225,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.wheels[1].radius = wheel_radius;
 		car.wheels[1].width = wheel_width;
 		car.wheels[1].front = true;
-		car.wheels[1].drive = true;
+		car.wheels[1].drive = false;
 		car.wheels[1].brake = true;
 		car.wheels[1].steering = true;
 
@@ -237,7 +237,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.wheels[2].radius = wheel_radius;
 		car.wheels[2].width = wheel_width;
 		car.wheels[2].front = false;
-		car.wheels[2].drive = false;
+		car.wheels[2].drive = true;
 		car.wheels[2].brake = true;
 		car.wheels[2].steering = false;
 
@@ -249,7 +249,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.wheels[3].radius = wheel_radius;
 		car.wheels[3].width = wheel_width;
 		car.wheels[3].front = false;
-		car.wheels[3].drive = false;
+		car.wheels[3].drive = true;
 		car.wheels[3].brake = true;
 		car.wheels[3].steering = false;
 
@@ -257,7 +257,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 //		vehicle = nullptr;
 		App->physics->ClearVehicle();
 		vehicle = App->physics->AddVehicle(car);
-		vehicle->SetPos(0, 12, 10);
+		vehicle->SetPos(0, 2, 2);
 	}
 		break;
 	case TRACTOR:
@@ -330,7 +330,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 //		vehicle = nullptr;
 		App->physics->ClearVehicle();
 		vehicle = App->physics->AddVehicle(car);
-		vehicle->SetPos(0, 12, 10);
+		vehicle->SetPos(0, 2, 2);
 	}
 		break;
 	default:

@@ -176,8 +176,8 @@ void ModuleSceneIntro::CreateMap() {
 				Cube new_cube(size_x, size_y, size_z);
 				new_cube.SetPos(x, y, z);
 				new_cube.color = White;
-				PhysBody3D* cube = App->physics->AddBody(new_cube, 0);
-
+				App->physics->AddBody(new_cube, 0);
+				track.add(new_cube);
 			}
 			w++;
 
@@ -196,31 +196,12 @@ void ModuleSceneIntro::CreateMap() {
 
 void ModuleSceneIntro::Draw() {
 
-	for (p2List_item<MapLayer*>* layer = this->data.layers.getFirst(); layer != nullptr; layer = layer->next)
+	int size_x = 4, size_y = 4, size_z = 4;
+	int x, y, z, w, h;
+	x = y = z = w = h = 0;
+
+	for (p2List_item<Cube>* box = track.getFirst(); box != nullptr; box = box->next)
 	{
-		int size_x = 4, size_y = 4, size_z = 4;
-		int x, y, z, w, h;
-		x = y = z = w = h = 0;
-		for (int id = 0; id < layer->data->size_data; id++)
-		{
-			if (layer->data->data[id] != 0)
-			{
-				Cube new_cube(size_x, size_y, size_z);
-				new_cube.SetPos(x, y, z);
-				new_cube.color = White;
-				new_cube.Render();
-
-			}
-			w++;
-
-			if (w == layer->data->width)
-			{
-				w = 0;
-				h++;
-			}
-
-			x = w * size_x;
-			z = h * size_y;
-		}
+		box->data.Render();		
 	}
 }

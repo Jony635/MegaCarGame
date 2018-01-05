@@ -14,7 +14,7 @@ enum CarType {
 
 #define MAX_ACCELERATION 10000.0f
 #define TURN_DEGREES 30.0f * DEGTORAD
-#define BRAKE_POWER 300.0f
+#define BRAKE_POWER 200.0f
 
 #define MAX_AXIS 32767
 #define AXIS_MARGIN 5000

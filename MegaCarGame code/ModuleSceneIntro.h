@@ -82,4 +82,5 @@ public:
 
 	pugi::xml_document	map_file;
 	MapData data;
+	p2List<Cube> track;
 };
