@@ -17,7 +17,7 @@ ModulePlayer::~ModulePlayer()
 bool ModulePlayer::Start()
 {
 	LOG("Loading player");
-
+	CreateCar(SPORT);
 
 	
 	return true;
