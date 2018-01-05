@@ -26,7 +26,10 @@ public:
 	virtual ~ModulePlayer();
 
 	bool Start();
+
 	update_status Update(float dt);
+	update_status PostUpdate(float dt);
+
 	bool CleanUp();
 
 	bool CreateCar(CarType type);

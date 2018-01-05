@@ -152,6 +152,15 @@ update_status ModulePlayer::Update(float dt)
 		App->window->SetTitle(title);
 	}
 
+	
+
+	
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModulePlayer::PostUpdate(float dt)
+{
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
 		CreateCar(SPORT);
@@ -160,12 +169,8 @@ update_status ModulePlayer::Update(float dt)
 	{
 		CreateCar(TRACTOR);
 	}
-
-	
-
 	return UPDATE_CONTINUE;
 }
-
 
 bool ModulePlayer::CreateCar(CarType type) {
 
@@ -254,10 +259,7 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.wheels[3].drive = true;
 		car.wheels[3].brake = true;
 		car.wheels[3].steering = false;
-
-//		delete vehicle;
-//		vehicle = nullptr;
-		App->physics->ClearVehicle();
+		
 		vehicle = App->physics->AddVehicle(car);
 		vehicle->SetPos(0, 2, 2);
 	}
@@ -327,10 +329,6 @@ bool ModulePlayer::CreateCar(CarType type) {
 		car.wheels[2].drive = false;
 		car.wheels[2].brake = true;
 		car.wheels[2].steering = false;
-
-//		delete vehicle;
-//		vehicle = nullptr;
-		App->physics->ClearVehicle();
 		vehicle = App->physics->AddVehicle(car);
 		vehicle->SetPos(0, 2, 2);
 	}
@@ -341,3 +339,5 @@ bool ModulePlayer::CreateCar(CarType type) {
 
 	return vehicle != nullptr;
 }
+
+

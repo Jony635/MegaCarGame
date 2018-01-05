@@ -57,7 +57,6 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
-
 	if(body2 == (PhysBody3D*)App->player->vehicle)
 	LOG("Hit!");
 }

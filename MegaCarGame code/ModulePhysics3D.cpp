@@ -392,3 +392,15 @@ int	 DebugDrawer::getDebugMode() const
 {
 	return mode;
 }
+
+void ModulePhysics3D::ClearVehicle() 
+{
+	p2List_item<PhysVehicle3D*>* iterator = vehicles.getFirst();
+	while ( iterator != nullptr)
+	{
+		p2List_item<PhysVehicle3D*>* next = iterator->next;
+		this->world->removeRigidBody(iterator->data->body);
+		vehicles.del(iterator);
+		iterator = next;
+	}
+}
