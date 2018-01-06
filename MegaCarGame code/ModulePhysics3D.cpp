@@ -395,3 +395,17 @@ void ModulePhysics3D::ClearVehicle()
 		iterator = next;
 	}
 }
+
+
+void ModulePhysics3D::ClearBodies()
+{
+	p2List_item<PhysBody3D*>* iterator = bodies.getFirst();
+	while (iterator != nullptr)
+	{
+		p2List_item<PhysBody3D*>* next = iterator->next;
+		this->world->removeRigidBody(iterator->data->body);
+		bodies.del(iterator);
+		iterator = next;
+	}
+}
+

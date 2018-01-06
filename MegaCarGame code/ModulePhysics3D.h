@@ -36,6 +36,7 @@ public:
 	void AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
 
 	void ClearVehicle();
+	void ClearBodies();
 
 private:
 

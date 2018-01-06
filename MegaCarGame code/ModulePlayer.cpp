@@ -37,23 +37,24 @@ update_status ModulePlayer::Update(float dt)
 	movecam = false;
 
 	if (vehicle != nullptr) {
+
 		turn = acceleration = brake = 0.0f;
 
 		if (SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 0) {
 			if (vehicle->GetKmh() < 0)
 				brake = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * BRAKE_POWER / MAX_AXIS;
-			else if (vehicle->GetKmh() < 150)
+			else if (vehicle->GetKmh() < max_speed)
 			acceleration = SDL_GameControllerGetAxis(App->input->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) * MAX_ACCELERATION / MAX_AXIS;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
-			if (vehicle->GetKmh() < 150)
+			if (vehicle->GetKmh() < max_speed)
 			acceleration = MAX_ACCELERATION;
 		}
 		if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT || App->input->controller_key[SDL_CONTROLLER_BUTTON_A] == KEY_REPEAT)
 		{
-			if (vehicle->GetKmh() < 170)
+			if (vehicle->GetKmh() < max_speed + 25)
 			acceleration = 2 * MAX_ACCELERATION;
 		}
 
@@ -126,7 +127,7 @@ update_status ModulePlayer::Update(float dt)
 
 		vehicle->vehicle->m_wheelInfo[2].m_worldTransform.getOpenGLMatrix(matrix);
 		new_pos2 = vec3(matrix[12], matrix[13], matrix[14]);
-		App->camera->LookAt(new_pos2);
+	//	App->camera->LookAt(new_pos2);
 
 		vehicle->vehicle->m_wheelInfo[0].m_worldTransform.getOpenGLMatrix(matrix);
 		new_pos1 = vec3(matrix[12], matrix[13], matrix[14]);
@@ -134,6 +135,7 @@ update_status ModulePlayer::Update(float dt)
 		vec3 move = new_pos1 - new_pos2;
 
 		App->camera->Position = new_pos1 + move * -2 + vec3{0, 4, 0};
+
 		App->camera->LookAt(new_pos + vec3{ 0, 2, 0 });
 
 
@@ -147,10 +149,6 @@ update_status ModulePlayer::Update(float dt)
 		App->window->SetTitle(title);
 	}
 
-	
-
-	
-
 	return UPDATE_CONTINUE;
 }
 
@@ -158,6 +156,8 @@ update_status ModulePlayer::PostUpdate(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
+		App->scene_intro->ReStart();
+
 		CreateCar(SPORT);
 		vehicle->GetTransform(original_matrix);
 

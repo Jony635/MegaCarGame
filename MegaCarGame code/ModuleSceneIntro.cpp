@@ -8,8 +8,11 @@
 enum MAP_ENTITIES
 {
 	CUBE = 1,
-	PICK_UPS = 2,
-	ENTER_TRACK = 998
+	PICK_UPS,
+
+	ENTER_TRACK_CUBE = 6,
+	ENTER_TRACK_SENSOR= 8,
+	FINISH_LINE 
 };
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -31,9 +34,6 @@ bool ModuleSceneIntro::Start()
 	s.size = vec3(5, 3, 1);
 	s.SetPos(0, 2.5f, 20);
 
-	sensor = App->physics->AddBody(s, 0.0f);
-	sensor->SetAsSensor(true);
-	sensor->collision_listeners.add(this);
 
 	Load("data/maps/map3.tmx");
 	CreateMap();
@@ -62,10 +62,7 @@ update_status ModuleSceneIntro::Update(float dt)
 		
 	p.Render();
 
-	sensor->GetTransform(&s.transform);
-	s.Render();
-
-	Sphere sens(13);
+	Sphere sens(2.5);
 	sens.color = { 1,1,0,0.5 };
 
 	for (p2List_item<PhysBody3D*>* iterator = sensors.getFirst(); iterator != nullptr; iterator = iterator->next)
@@ -92,6 +89,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	return UPDATE_CONTINUE;
 }
+
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
 	p2List_item<p2List_item<PhysBody3D*>*>* iterator = sensors_to_delete.getFirst();
@@ -103,8 +101,10 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		iterator = next;
 	}
 	sensors_to_delete.clear();
+
 	return UPDATE_CONTINUE;
 }
+
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 	if (body2 == (PhysBody3D*)App->player->vehicle)
@@ -120,6 +120,21 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 				break;
 			}
 			i++;
+		}
+		if (body1 == enter_track) 
+		{
+			if (!entered)
+			{
+				entered = true;
+				App->player->max_speed = 150;
+				sensors_to_delete.add(sensors.findNode(body1));
+
+				for (p2List_item<Cube>* iterator = track_door.getFirst(); iterator != nullptr; iterator = iterator->next)
+				{
+					track.add(iterator->data);
+					App->physics->AddBody(iterator->data, 0);
+				}
+			}
 		}
 	}
 }
@@ -258,13 +273,24 @@ void ModuleSceneIntro::CreateMap() {
 				
 			}
 			
-			else if (layer->data->data[id] == MAP_ENTITIES::ENTER_TRACK)
+			else if (layer->data->data[id] == MAP_ENTITIES::ENTER_TRACK_CUBE)
+			{
+				Cube new_cube(size_x, size_y, size_z);
+				new_cube.SetPos(x, y, z);
+				new_cube.color = Grey;
+				new_cube.SetPos(x, y, z);
+				track_door.add(new_cube);
+			}
+
+			else if (layer->data->data[id] == MAP_ENTITIES::ENTER_TRACK_SENSOR)
 			{
 				Sphere new_sphere(13);
 				new_sphere.SetPos(x, y, z);
 				new_sphere.color = Red;
-				App->physics->AddBody(new_sphere, 0);
-				enter_track = new_sphere;
+				enter_track = App->physics->AddBody(new_sphere, 0);
+				
+				enter_track->SetAsSensor(true);
+				enter_track->collision_listeners.add(this);
 				
 			}
 			w++;
@@ -299,7 +325,25 @@ void ModuleSceneIntro::Draw() {
 	{
 		box->data.Render();		
 	}
+}
 
-	enter_track.Render();
+void ModuleSceneIntro::ReStart() 
+{
+	App->physics->ClearBodies();
+
+	p2List_item<Cube>* iterator = track.getFirst();
+	while (iterator != nullptr)
+	{
+		p2List_item<Cube>* next = iterator->next;
+		track.del(iterator);
+		iterator = next;
+	}
+
+	delete[] sensors_passed;
+
+	CreateMap();
+	App->player->max_speed = 50;
+	entered = false;
+
 
 }

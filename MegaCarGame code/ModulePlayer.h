@@ -44,11 +44,15 @@ public:
 	bool movecam = false;
 
 	vec3 last_pos{ 0,0,0 };
-	vec3 new_pos;
+	vec3 new_pos{ 0,0,0 };
 	vec3 new_pos1;
 	vec3 new_pos2;
 
 
+
 	float* matrix = new float[20];
 	float* original_matrix = new float[20];
+
+	int max_speed = 30;
+	bool enter_track = false;
 };

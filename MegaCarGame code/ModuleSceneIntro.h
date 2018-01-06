@@ -76,17 +76,25 @@ public:
 	void CreateMap();
 	void Draw();
 
+	void ReStart();
+
 
 public:
 	Cube s;
-	PhysBody3D* sensor;
+
+	PhysBody3D* enter_track;
+	bool entered = false;
+	p2List<Cube> track_door;
 
 	pugi::xml_document	map_file;
 	MapData data;
 	p2List<Cube> track;
-	Sphere enter_track;
+
 	p2List<PhysBody3D*> sensors;
 	p2List<p2List_item<PhysBody3D*>*> sensors_to_delete;
 	bool* sensors_passed = nullptr;
 	int num_sensors = 0;
+
+
+
 };
