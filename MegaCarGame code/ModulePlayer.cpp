@@ -119,9 +119,7 @@ update_status ModulePlayer::Update(float dt)
 
 		vehicle->Render();
 
-
 		vehicle->GetTransform(matrix);
-
 
 		new_pos = vec3(matrix[12], matrix[13], matrix[14]);
 		App->camera->LookAt(new_pos);
@@ -133,17 +131,14 @@ update_status ModulePlayer::Update(float dt)
 		vehicle->vehicle->m_wheelInfo[0].m_worldTransform.getOpenGLMatrix(matrix);
 		new_pos1 = vec3(matrix[12], matrix[13], matrix[14]);
 
-
 		vec3 move = new_pos1 - new_pos2;
 
 		App->camera->Position = new_pos1 + move * -2 + vec3{0, 4, 0};
-
-
-		vehicle->GetTransform(matrix);
-		new_pos = vec3(matrix[12], matrix[13], matrix[14]);
 		App->camera->LookAt(new_pos + vec3{ 0, 2, 0 });
 
 
+		new_pos = vec3(matrix[12], matrix[13], matrix[14]);
+		vehicle->GetTransform(matrix);
 
 
 

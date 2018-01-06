@@ -26,9 +26,11 @@ public:
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
 private:
-
 	Mix_Music*			music;
 	p2List<Mix_Chunk*>	fx;
+
+public:
+	unsigned int collectible_fx = -1;
 };
 
 #endif // __ModuleAudio_H__
