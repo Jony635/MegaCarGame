@@ -41,6 +41,11 @@ bool ModuleAudio::Init()
 		ret = true;
 	}
 
+	if (ret)
+	{
+		this->collectible_fx = LoadFx("data/audio/CheckPoint.ogg");
+	}
+
 	return ret;
 }
 

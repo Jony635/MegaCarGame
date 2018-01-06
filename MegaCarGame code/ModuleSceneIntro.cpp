@@ -38,6 +38,7 @@ bool ModuleSceneIntro::Start()
 	Load("data/maps/map3.tmx");
 	CreateMap();
 
+	App->audio->PlayMusic("data/audio/Tobu  Wholm - Motion (Copyright Free Gaming Music).ogg");
 
 	return ret;
 }
@@ -115,6 +116,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 			{
 				sensors_passed[i] = true;
 				sensors_to_delete.add(iterator);
+				App->audio->PlayFx(App->audio->collectible_fx);
 				break;
 			}
 			i++;
