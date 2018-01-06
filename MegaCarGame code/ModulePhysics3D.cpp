@@ -407,5 +407,36 @@ void ModulePhysics3D::ClearBodies()
 		bodies.del(iterator);
 		iterator = next;
 	}
+	bodies.clear();
 }
+
+void ModulePhysics3D::ClearConstraints()
+{
+	p2List_item<btTypedConstraint*>* iterator = constraints.getFirst();
+	while (iterator != nullptr)
+	{
+		p2List_item<btTypedConstraint*>* next = iterator->next;
+		this->world->removeConstraint(iterator->data);
+		constraints.del(iterator);
+		iterator = next;
+	}
+	bodies.clear();
+}
+
+
+
+void ModulePhysics3D::AddHingeConstraint(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& pa, const vec3& pb)
+{
+	btVector3 vecA(pa.x, pa.y, pa.z);
+	btVector3 vecB(pb.x, pb.y, pb.z);
+	btVector3 vecC(0, 1, 0);
+
+
+	btHingeConstraint* hconstraint = new btHingeConstraint(*bodyA.body, *bodyB.body, vecA, vecB, vecC, vecC);
+
+	world->addConstraint(hconstraint);
+	constraints.add(hconstraint);
+}
+
+
 

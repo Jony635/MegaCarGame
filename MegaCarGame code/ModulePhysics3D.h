@@ -37,6 +37,9 @@ public:
 
 	void ClearVehicle();
 	void ClearBodies();
+	void ClearConstraints();
+
+	void AddHingeConstraint(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& pa, const vec3& pb);
 
 private:
 

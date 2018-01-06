@@ -38,7 +38,9 @@ bool ModuleSceneIntro::Start()
 	Load("data/maps/map3.tmx");
 	CreateMap();
 
+	Mix_VolumeMusic(32);
 	App->audio->PlayMusic("data/audio/Tobu  Wholm - Motion (Copyright Free Gaming Music).ogg");
+
 
 	return ret;
 }
@@ -54,23 +56,6 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	Plane p(0, 0, 0, 0);
-	p.wire = false;
-	p.axis = false;
-
-	p.color = { 0,1,0,1 };
-		
-	p.Render();
-
-	Sphere sens(2.5);
-	sens.color = { 1,1,0,0.5 };
-
-	for (p2List_item<PhysBody3D*>* iterator = sensors.getFirst(); iterator != nullptr; iterator = iterator->next)
-	{
-		iterator->data->GetTransform(&sens.transform);
-		sens.Render();
-	}
-
 	bool win = false;
 	for (int i = 0; i < num_sensors; i++)
 	{
@@ -138,8 +123,6 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		}
 	}
 }
-
-
 
 bool ModuleSceneIntro::Load(char* path) {
 	bool ret = true;
@@ -216,7 +199,6 @@ bool ModuleSceneIntro::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	layer->width = node.attribute("width").as_int();
 	layer->height = node.attribute("height").as_int();
 
-
 	for (pugi::xml_node iterator = node.child("data").child("tile"); iterator != nullptr; iterator = iterator.next_sibling())
 	{
 		layer->size_data++;
@@ -256,7 +238,6 @@ void ModuleSceneIntro::CreateMap() {
 				new_cube.color = Grey;
 				App->physics->AddBody(new_cube, 0);
 				track.add(new_cube);
-
 			}
 
 			else if (layer->data->data[id] == MAP_ENTITIES::PICK_UPS)
@@ -293,6 +274,16 @@ void ModuleSceneIntro::CreateMap() {
 				enter_track->collision_listeners.add(this);
 				
 			}
+
+			if (layer->data->data[id] == MAP_ENTITIES::FINISH_LINE)
+			{
+				Cube new_cube(2, 2, 2);
+				new_cube.SetPos(x, y, 2);
+				new_cube.color = Blue;
+				new_cube.SetPos(x, y, z);
+				finish_line.add(new_cube);
+			}
+
 			w++;
 
 			if (w == layer->data->width)
@@ -306,6 +297,17 @@ void ModuleSceneIntro::CreateMap() {
 		}
 	}
 
+	for (p2List_item<Cube>* iterator = finish_line.getFirst(); iterator != nullptr; iterator = iterator->next)
+	{
+		finish_line_p.add(App->physics->AddBody(iterator->data, 0.1f));
+	}
+
+	for (p2List_item<PhysBody3D*>* iterator = finish_line_p.getFirst(); iterator != nullptr; iterator = iterator->next)
+	{
+		if (iterator->next)
+			App->physics->AddHingeConstraint(*iterator->data, *iterator->next->data, { 2,2,2 }, { 0,0,0 });
+	}
+
 	num_sensors = sensors.count();
 	sensors_passed = new bool[num_sensors];
 	for (int i = 0; i < num_sensors; i++)
@@ -317,32 +319,71 @@ void ModuleSceneIntro::CreateMap() {
 
 void ModuleSceneIntro::Draw() {
 
-	int size_x = 4, size_y = 4, size_z = 4;
-	int x, y, z, w, h;
-	x = y = z = w = h = 0;
+	Plane p(0, 0, 0, 0);
+	p.wire = false;
+	p.axis = false;
+
+	p.color = { 0,1,0,1 };
+
+	p.Render();
+
+
+	Sphere sens(2.5);
+	sens.color = { 1,1,0,0.5 };
+
+	for (p2List_item<PhysBody3D*>* iterator = sensors.getFirst(); iterator != nullptr; iterator = iterator->next)
+	{
+		iterator->data->GetTransform(&sens.transform);
+		sens.Render();
+	}
+
+
+	Cube line(2.5, 2.5, 2.5);
+	line.color = { 1, 0, 0, 1 };
+
+	for (p2List_item<PhysBody3D*>* iterator = finish_line_p.getFirst(); iterator != nullptr; iterator = iterator->next)
+	{
+		iterator->data->GetTransform(&line.transform);
+		line.Render();
+	}
+
 
 	for (p2List_item<Cube>* box = track.getFirst(); box != nullptr; box = box->next)
 	{
 		box->data.Render();		
 	}
+
 }
+
 
 void ModuleSceneIntro::ReStart() 
 {
 	App->physics->ClearBodies();
 
-	p2List_item<Cube>* iterator = track.getFirst();
-	while (iterator != nullptr)
+	for (p2List_item<PhysBody3D*>* iterator = finish_line_p.getFirst(); iterator != nullptr; iterator = iterator->next)
 	{
-		p2List_item<Cube>* next = iterator->next;
-		track.del(iterator);
-		iterator = next;
+		delete iterator->data;
+		iterator->data = nullptr;
 	}
+	finish_line_p.clear();
 
+	for (p2List_item<PhysBody3D*>* iterator = sensors.getFirst(); iterator != nullptr; iterator = iterator->next)
+	{
+		delete iterator->data;
+		iterator->data = nullptr;
+	}
+	sensors.clear();
+
+	
+
+	track.clear();
+	finish_line.clear();
+
+	
 	delete[] sensors_passed;
 
 	CreateMap();
-	App->player->max_speed = 50;
+	App->player->max_speed = 30;
 	entered = false;
 
 

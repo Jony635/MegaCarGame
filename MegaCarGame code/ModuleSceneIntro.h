@@ -86,6 +86,9 @@ public:
 	bool entered = false;
 	p2List<Cube> track_door;
 
+	p2List<Cube> finish_line;
+	p2List<PhysBody3D*> finish_line_p;
+
 	pugi::xml_document	map_file;
 	MapData data;
 	p2List<Cube> track;

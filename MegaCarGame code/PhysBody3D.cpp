@@ -11,6 +11,7 @@ PhysBody3D::PhysBody3D(btRigidBody* body) : body(body)
 // ---------------------------------------------------------
 PhysBody3D::~PhysBody3D()
 {
+	collision_listeners.clear();
 	delete body;
 }
 
