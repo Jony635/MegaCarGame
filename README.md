@@ -5,24 +5,25 @@ Car Game using OpenGL
 
 ### Keyboard:
 
-- Use ARROWS for moving your vehicle (Down Arrow for going backwards and normal brake).
-- Use P for using the Turbo.
-- Use SPACE for using the Hand Brake.
-- Use 3 key for respawn at the beggining.
+- Use ARROWS to move your vehicle (Down Arrow for going backwards and normal brake).
+- Use P to use the Turbo.
+- Use SPACE to use the Hand Brake.
+- Use 3 key to respawn at the beggining.
 
 
 ### Controller:
 
-- Use the LEFT_STICK for orienting your vehicle.
-- Use the RIGHT_TRIGGER for moving ahead.
-- Use the A button for using the Turbo.
-- Use the LEFT_TRIGGER for using the normal brake and go backwards.
+- Use the LEFT_STICK to orientate your vehicle.
+- Use the RIGHT_TRIGGER to move ahead.
+- Use the A BUTTON to use the Turbo.
+- Use the LEFT_TRIGGER to use the normal brake and go backwards.
+- Use the RB_TRIGGER to use the Hand Brake.
 
 
 ## GOAL OF THE GAME
 
 Do a complete loop taking all the checkpoints for winning the game and to listen to the epic final sound! ^^
-
+You can't loose in this game!
 
 ## AUTHORS
 
