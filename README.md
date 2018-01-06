@@ -8,7 +8,7 @@ Car Game using OpenGL
 - Use ARROWS to move your vehicle (Down Arrow for going backwards and normal brake).
 - Use P to use the Turbo.
 - Use SPACE to use the Hand Brake.
-- Use 3 key to respawn at the beggining.
+- Use RETURN(ENTER) key to respawn at the beggining.
 
 
 ### Controller:

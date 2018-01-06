@@ -9,7 +9,6 @@ enum CarType {
 	NONE,
 
 	SPORT,
-	TRACTOR
 };
 
 #define MAX_ACCELERATION 10000.0f

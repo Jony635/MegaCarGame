@@ -415,7 +415,7 @@ void ModuleSceneIntro::ReStart()
 
 	CreateMap();
 	App->player->max_speed = 30;
-	entered = false;
+	finish_line_bool = entered = false;
 	first_win = true;
 
 
