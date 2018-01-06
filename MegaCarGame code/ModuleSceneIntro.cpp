@@ -5,6 +5,13 @@
 #include "PhysBody3D.h"
 #include "Color.h"
 
+enum MAP_ENTITIES
+{
+	CUBE = 1,
+	PICK_UPS = 2,
+	ENTER_TRACK = 998
+};
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -84,7 +91,19 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	return UPDATE_CONTINUE;
 }
-
+update_status ModuleSceneIntro::PostUpdate(float dt)
+{
+	p2List_item<p2List_item<PhysBody3D*>*>* iterator = sensors_to_delete.getFirst();
+	while (iterator != nullptr)
+	{
+		p2List_item<p2List_item<PhysBody3D*>*>* next = iterator->next;
+		sensors.del(iterator->data);
+		sensors_to_delete.del(iterator);
+		iterator = next;
+	}
+	sensors_to_delete.clear();
+	return UPDATE_CONTINUE;
+}
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 	if (body2 == (PhysBody3D*)App->player->vehicle)
@@ -95,6 +114,8 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 			if (body1 == iterator->data)
 			{
 				sensors_passed[i] = true;
+				sensors_to_delete.add(iterator);
+				break;
 			}
 			i++;
 		}
@@ -211,7 +232,7 @@ void ModuleSceneIntro::CreateMap() {
 		y = size_y / 2;
 		for (int id = 0; id < layer->data->size_data; id++)
 		{
-			if (layer->data->data[id] == 1)
+			if (layer->data->data[id] == MAP_ENTITIES::CUBE)
 			{
 				Cube new_cube(size_x, size_y, size_z);
 				new_cube.SetPos(x, y, z);
@@ -221,7 +242,7 @@ void ModuleSceneIntro::CreateMap() {
 
 			}
 
-			else if (layer->data->data[id] == 2)
+			else if (layer->data->data[id] == MAP_ENTITIES::PICK_UPS)
 			{
 				Sphere new_sphere(13);
 				new_sphere.SetPos(x, y, z);
@@ -235,7 +256,7 @@ void ModuleSceneIntro::CreateMap() {
 				
 			}
 			
-			else if (layer->data->data[id] == 998)
+			else if (layer->data->data[id] == MAP_ENTITIES::ENTER_TRACK)
 			{
 				Sphere new_sphere(13);
 				new_sphere.SetPos(x, y, z);

@@ -65,6 +65,7 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	bool Load(char* path);
@@ -85,6 +86,7 @@ public:
 	p2List<Cube> track;
 	Sphere enter_track;
 	p2List<PhysBody3D*> sensors;
+	p2List<p2List_item<PhysBody3D*>*> sensors_to_delete;
 	bool* sensors_passed = nullptr;
 	int num_sensors = 0;
 };

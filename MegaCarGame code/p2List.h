@@ -154,6 +154,7 @@ public:
 		}
 
 		delete item;
+		item = nullptr;
 		--size;
 		return(true);
 	}
