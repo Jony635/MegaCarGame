@@ -84,4 +84,7 @@ public:
 	MapData data;
 	p2List<Cube> track;
 	Sphere enter_track;
+	p2List<PhysBody3D*> sensors;
+	bool* sensors_passed = nullptr;
+	int num_sensors = 0;
 };

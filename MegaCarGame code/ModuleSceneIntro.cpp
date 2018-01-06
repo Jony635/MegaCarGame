@@ -56,14 +56,49 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	sensor->GetTransform(&s.transform);
 	s.Render();
+
+	Sphere sens(13);
+	sens.color = { 1,1,0,0.5 };
+
+	for (p2List_item<PhysBody3D*>* iterator = sensors.getFirst(); iterator != nullptr; iterator = iterator->next)
+	{
+		iterator->data->GetTransform(&sens.transform);
+		sens.Render();
+	}
+
+	bool win = false;
+	for (int i = 0; i < num_sensors; i++)
+	{
+		if (sensors_passed[i])
+		{
+			win = true;
+		}
+		else
+		{
+			win = false;
+			break;
+		}
+	}
+
 	Draw();
+
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
-	if(body2 == (PhysBody3D*)App->player->vehicle)
-	LOG("Hit!");
+	if (body2 == (PhysBody3D*)App->player->vehicle)
+	{
+		int i = 0;
+		for (p2List_item<PhysBody3D*>* iterator = sensors.getFirst(); iterator != nullptr; iterator = iterator->next)
+		{
+			if (body1 == iterator->data)
+			{
+				sensors_passed[i] = true;
+			}
+			i++;
+		}
+	}
 }
 
 
@@ -183,8 +218,24 @@ void ModuleSceneIntro::CreateMap() {
 				new_cube.color = Grey;
 				App->physics->AddBody(new_cube, 0);
 				track.add(new_cube);
+
 			}
-			else if (layer->data->data[id] == 8)
+
+			else if (layer->data->data[id] == 2)
+			{
+				Sphere new_sphere(13);
+				new_sphere.SetPos(x, y, z);
+				new_sphere.color = { 1,1,0,0.5 };
+
+				PhysBody3D* new_sensor = App->physics->AddBody(new_sphere, 0);
+				new_sensor->SetAsSensor(true);
+				new_sensor->collision_listeners.add(this);
+
+				sensors.add(new_sensor);
+				
+			}
+			
+			else if (layer->data->data[id] == 998)
 			{
 				Sphere new_sphere(13);
 				new_sphere.SetPos(x, y, z);
@@ -204,6 +255,13 @@ void ModuleSceneIntro::CreateMap() {
 			x = w * size_x;
 			z = h * size_z;
 		}
+	}
+
+	num_sensors = sensors.count();
+	sensors_passed = new bool[num_sensors];
+	for (int i = 0; i < num_sensors; i++)
+	{
+		sensors_passed[i] = false;
 	}
 }
 
