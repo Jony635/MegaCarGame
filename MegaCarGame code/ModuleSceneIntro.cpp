@@ -9,7 +9,7 @@ enum MAP_ENTITIES
 {
 	CUBE = 1,
 	PICK_UPS,
-
+	FINISH_LINE_SENSOR = 4,
 	ENTER_TRACK_CUBE = 6,
 	ENTER_TRACK_SENSOR= 8,
 	FINISH_LINE 
@@ -57,9 +57,10 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update(float dt)
 {
 	bool win = false;
+
 	for (int i = 0; i < num_sensors; i++)
 	{
-		if (sensors_passed[i])
+		if (sensors_passed[i] == true)
 		{
 			win = true;
 		}
@@ -68,6 +69,12 @@ update_status ModuleSceneIntro::Update(float dt)
 			win = false;
 			break;
 		}
+	}
+
+	if (win && first_win && finish_line_bool)
+	{
+		first_win = false;
+		App->audio->PlayFx(App->audio->wii);
 	}
 
 	Draw();
@@ -94,17 +101,30 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 	if (body2 == (PhysBody3D*)App->player->vehicle)
 	{
-		int i = 0;
+		if (body1 == line_sensor)
+		{
+			finish_line_bool = true;
+		}
 		for (p2List_item<PhysBody3D*>* iterator = sensors.getFirst(); iterator != nullptr; iterator = iterator->next)
 		{
 			if (body1 == iterator->data)
 			{
-				sensors_passed[i] = true;
-				sensors_to_delete.add(iterator);
-				App->audio->PlayFx(App->audio->collectible_fx);
+				int i = 0;
+				while (i < num_sensors)
+				{
+					if (sensors_passed[i])
+					{
+						i++;
+					}
+					else {
+						sensors_passed[i] = true;
+						sensors_to_delete.add(iterator);
+						App->audio->PlayFx(App->audio->collectible_fx);
+						break;
+					}
+				}
 				break;
 			}
-			i++;
 		}
 		if (body1 == enter_track) 
 		{
@@ -253,6 +273,17 @@ void ModuleSceneIntro::CreateMap() {
 				sensors.add(new_sensor);
 				
 			}
+			else if (layer->data->data[id] == MAP_ENTITIES::FINISH_LINE_SENSOR)
+			{
+				Sphere new_sphere(13);
+				new_sphere.SetPos(x, y, z);
+
+				PhysBody3D* new_sensor = App->physics->AddBody(new_sphere, 0);
+				new_sensor->SetAsSensor(true);
+				new_sensor->collision_listeners.add(this);
+				 
+				line_sensor = new_sensor;
+			}
 			
 			else if (layer->data->data[id] == MAP_ENTITIES::ENTER_TRACK_CUBE)
 			{
@@ -385,6 +416,7 @@ void ModuleSceneIntro::ReStart()
 	CreateMap();
 	App->player->max_speed = 30;
 	entered = false;
+	first_win = true;
 
 
 }

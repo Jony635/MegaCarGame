@@ -44,6 +44,8 @@ bool ModuleAudio::Init()
 	if (ret)
 	{
 		this->collectible_fx = LoadFx("data/audio/CheckPoint.ogg");
+		this->wii = LoadFx("data/audio/wii.ogg");
+		Mix_VolumeChunk(fx.getLast()->data, 50);
 	}
 
 	return ret;

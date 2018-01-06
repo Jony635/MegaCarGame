@@ -31,6 +31,7 @@ private:
 
 public:
 	unsigned int collectible_fx = -1;
+	unsigned int wii = -1;
 };
 
 #endif // __ModuleAudio_H__

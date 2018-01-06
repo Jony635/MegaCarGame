@@ -98,6 +98,9 @@ public:
 	bool* sensors_passed = nullptr;
 	int num_sensors = 0;
 
+	bool first_win = true;
 
+	bool finish_line_bool = false;
+	PhysBody3D* line_sensor = nullptr;
 
 };
