@@ -255,7 +255,7 @@ void ModuleSceneIntro::CreateMap() {
 			{
 				Cube new_cube(size_x, size_y, size_z);
 				new_cube.SetPos(x, y, z);
-				new_cube.color = Grey;
+				new_cube.color = White;
 				App->physics->AddBody(new_cube, 0);
 				track.add(new_cube);
 			}
@@ -348,17 +348,17 @@ void ModuleSceneIntro::CreateMap() {
 }
 
 
-void ModuleSceneIntro::Draw() {
+void ModuleSceneIntro::Draw()
+{
 
 	Plane p(0, 0, 0, 0);
 	p.wire = false;
 	p.axis = false;
 
-	p.color = { 0,1,0,1 };
-
+	p.color = Grey;
+	 
 	p.Render();
-
-
+	
 	Sphere sens(2.5);
 	sens.color = { 1,1,0,0.5 };
 
@@ -367,8 +367,7 @@ void ModuleSceneIntro::Draw() {
 		iterator->data->GetTransform(&sens.transform);
 		sens.Render();
 	}
-
-
+	
 	Cube line(2.5, 2.5, 2.5);
 	line.color = { 1, 0, 0, 1 };
 
@@ -377,13 +376,11 @@ void ModuleSceneIntro::Draw() {
 		iterator->data->GetTransform(&line.transform);
 		line.Render();
 	}
-
-
+	
 	for (p2List_item<Cube>* box = track.getFirst(); box != nullptr; box = box->next)
 	{
 		box->data.Render();		
 	}
-
 }
 
 

@@ -15,7 +15,7 @@ Car Game using OpenGL
 
 - Use the LEFT_STICK to orientate your vehicle.
 - Use the RIGHT_TRIGGER to move ahead.
-- Use the A BUTTON to use the Turbo.
+- Use the A_BUTTON to use the Turbo and start the car.
 - Use the LEFT_TRIGGER to use the normal brake and go backwards.
 - Use the RB_TRIGGER to use the Hand Brake.
 
